@@ -33,7 +33,7 @@ public class Denoiser implements Closeable {
     if (dataIn.length < 960) {
       return dataIn;
     }
-    float[] pcmIn = Bytes.toFloatArray(dataIn);
+    float[] pcmIn = Bytes.toFloatArray2(dataIn);
     float[] pcmOut = new float[pcmIn.length];
     Rnnoise.INSTANCE.rnnoise_process_frame(state, pcmOut, pcmIn);
     return Bytes.toByteArray(pcmOut);
