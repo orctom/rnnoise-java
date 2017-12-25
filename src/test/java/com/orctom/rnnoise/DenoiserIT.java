@@ -1,5 +1,6 @@
 package com.orctom.rnnoise;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import org.junit.Test;
@@ -31,7 +32,9 @@ public class DenoiserIT {
         }
         byte[] data = Arrays.copyOfRange(bytes, startIndex, endIndex);
         LOGGER.debug("{} --> {}", startIndex, endIndex);
+        Stopwatch stopwatch = Stopwatch.createStarted();
         byte[] dataOut = denoiser.process(data, startIndex, endIndex);
+        LOGGER.debug("took: {}", stopwatch);
 
         if (isFistFrame) {
           isFistFrame = false;
