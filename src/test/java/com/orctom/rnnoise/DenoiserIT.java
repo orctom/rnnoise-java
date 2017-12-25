@@ -2,35 +2,36 @@ package com.orctom.rnnoise;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
-import com.sun.jna.Pointer;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.*;
-
-public class DenoiserTest {
+public class DenoiserIT {
+  
+  private static final Logger LOGGER = LoggerFactory.getLogger(DenoiserIT.class);
 
   @Test
   public void process() throws Exception {
     try (Denoiser denoiser = new Denoiser()) {
-      InputStream in = DenoiserTest.class.getResourceAsStream("/sample.wav");
+      InputStream in = DenoiserIT.class.getResourceAsStream("/sample.wav");
       byte[] bytes = ByteStreams.toByteArray(in);
       int frameSize = 480 * 2;
       int startIndex = 0;
       int endIndex = frameSize;
       boolean isFistFrame = true;
+      LOGGER.debug("total: {}", bytes.length);
       byte[] output = new byte[bytes.length];
       while (startIndex < bytes.length) {
         if (endIndex > bytes.length) {
           endIndex = bytes.length;
         }
         byte[] data = Arrays.copyOfRange(bytes, startIndex, endIndex);
-        byte[] dataOut = denoiser.process(data);
+        LOGGER.debug("{} --> {}", startIndex, endIndex);
+        byte[] dataOut = denoiser.process(data, startIndex, endIndex);
 
         if (isFistFrame) {
           isFistFrame = false;
@@ -47,14 +48,14 @@ public class DenoiserTest {
       File file = new File(cwd, "processed.pcm");
       if (file.exists()) {
         boolean deleted = file.delete();
-        System.out.println("deleted: " + deleted);
+        LOGGER.debug("deleted: {}", deleted);
       }
 
       Files.write(output, file);
-      System.out.println("Processed wrote to: " + file.getAbsolutePath());
+      LOGGER.debug("Processed wrote to: {}", file.getAbsolutePath());
     } catch (Exception e) {
       e.printStackTrace();
     }
-    System.out.println("done.");
+    LOGGER.debug("done.");
   }
 }

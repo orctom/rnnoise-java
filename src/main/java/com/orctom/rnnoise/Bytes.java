@@ -52,6 +52,14 @@ public abstract class Bytes {
     return out;
   }
 
+  public static short[] toShortArray2(byte[] bytes) {
+    short[] shorts = new short[bytes.length / 2];
+    for (int i = 0; i < bytes.length / 2; ++i) {
+      shorts[i] = (short) ((bytes[i * 2 + 1] << 8) & 0xFFFF | (bytes[i * 2] & 0x00FF));
+    }
+    return shorts;
+  }
+
   public static short[] byteArray2ShortArray(byte[] b) {
     int len = b.length / 2;
     int index = 0;
@@ -87,7 +95,15 @@ public abstract class Bytes {
     return floats;
   }
 
-  public static float[] toFloatArray(byte[] input) {
+  public static float[] toFloatArray(byte[] bytes) {
+    float[] floats = new float[bytes.length / 2];
+    for (int i = 0; i < bytes.length / 2; ++i) {
+      floats[i] = (float) ((bytes[i * 2 + 1] << 8) & 0xFFFF | (bytes[i * 2] & 0x00FF));
+    }
+    return floats;
+  }
+
+  public static float[] toFloatArray2(byte[] input) {
     float[] ret = new float[input.length / 2];
     for (int i = 0; i < input.length / 2; ++i) {
       if ((input[i * 2 + 1] & 0x80) != 0) {
