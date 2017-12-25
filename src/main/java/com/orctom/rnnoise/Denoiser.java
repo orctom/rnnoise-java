@@ -12,6 +12,8 @@ public class Denoiser implements Closeable {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Denoiser.class);
 
+  private static final int FRAME_SIZE = 960;
+
   private Pointer state;
 
   static {
@@ -29,11 +31,11 @@ public class Denoiser implements Closeable {
     state = null;
   }
 
-  public byte[] process(byte[] dataIn, int startIndex, int endIndex) {
-    if (dataIn.length < 960) {
+  public byte[] process(byte[] dataIn) {
+    if (dataIn.length < FRAME_SIZE) {
       return dataIn;
     }
-    float[] pcmIn = Bytes.toFloatArray2(dataIn);
+    float[] pcmIn = Bytes.toFloatArray(dataIn);
     float[] pcmOut = new float[pcmIn.length];
     Rnnoise.INSTANCE.rnnoise_process_frame(state, pcmOut, pcmIn);
     return Bytes.toByteArray(pcmOut);
