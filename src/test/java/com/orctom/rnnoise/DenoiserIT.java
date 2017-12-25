@@ -33,7 +33,7 @@ public class DenoiserIT {
         byte[] data = Arrays.copyOfRange(bytes, startIndex, endIndex);
         LOGGER.debug("{} --> {}", startIndex, endIndex);
         Stopwatch stopwatch = Stopwatch.createStarted();
-        byte[] dataOut = denoiser.process(data, startIndex, endIndex);
+        byte[] dataOut = denoiser.process(data);
         LOGGER.debug("took: {}", stopwatch);
 
         if (isFistFrame) {
