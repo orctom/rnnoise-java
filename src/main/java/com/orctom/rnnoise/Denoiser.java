@@ -62,7 +62,7 @@ public class Denoiser implements Closeable {
   }
 
   private byte[] processFrame(byte[] frame) {
-    if (frame.length == FRAME_SIZE) {
+    if (frame.length != FRAME_SIZE) {
       return frame;
     }
 
