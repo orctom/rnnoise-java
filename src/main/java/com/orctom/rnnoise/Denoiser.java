@@ -1,6 +1,5 @@
 package com.orctom.rnnoise;
 
-import com.orctom.rnnoise.exception.IllegalFrameSizeException;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
@@ -17,10 +16,6 @@ public class Denoiser implements Closeable {
   private static final int FRAME_SIZE = 960;
 
   private Pointer state;
-
-  static {
-    Native.setProtected(true);
-  }
 
   public Denoiser() {
     LOGGER.debug("Denoiser started");
@@ -39,10 +34,6 @@ public class Denoiser implements Closeable {
       return pcm;
     }
 
-//    if (len % FRAME_SIZE != 0) {
-//      throw new IllegalFrameSizeException("Size must be times of: " + FRAME_SIZE + ", len: " + len);
-//    }
-
     byte[] denoised = new byte[len];
     int startIndex = 0;
     int endIndex = FRAME_SIZE;
@@ -50,6 +41,8 @@ public class Denoiser implements Closeable {
       if (endIndex > len) {
         endIndex = len;
       }
+
+      LOGGER.trace("start: {}, end: {}", startIndex, endIndex);
 
       byte[] frame = Arrays.copyOfRange(pcm, startIndex, endIndex);
       byte[] processed = processFrame(frame);

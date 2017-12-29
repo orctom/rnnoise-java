@@ -20,8 +20,8 @@ public class DenoiserIT {
     try (Denoiser denoiser = new Denoiser()) {
       InputStream in = DenoiserIT.class.getResourceAsStream("/sample.wav");
       byte[] bytes = ByteStreams.toByteArray(in);
-      int frameSize = 9600;
-//      int frameSize = 12800;
+//      int frameSize = 9600;
+      int frameSize = 12800;
       int startIndex = 0;
       int endIndex = frameSize;
       boolean isFistFrame = true;
