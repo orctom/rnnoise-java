@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Denoiser implements Closeable {
 
@@ -17,6 +18,8 @@ public class Denoiser implements Closeable {
 
   private Pointer state;
 
+  private AtomicBoolean stopped = new AtomicBoolean(false);
+
   public Denoiser() {
     LOGGER.debug("Denoiser started");
     state = Rnnoise.INSTANCE.rnnoise_create();
@@ -24,6 +27,10 @@ public class Denoiser implements Closeable {
 
   public void close() {
     LOGGER.debug("Denoiser closed");
+    if (stopped.getAndSet(true)) {
+      return;
+    }
+
     Rnnoise.INSTANCE.rnnoise_destroy(state);
     state = null;
   }
